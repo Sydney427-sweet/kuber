@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cache-proxy-monitor
+  namespace: llm-serving
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: cache-proxy
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache-proxy
+  namespace: llm-serving
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-proxy
+  template:
+    metadata:
+      labels:
+        app: cache-proxy
+    spec:
+      containers:
+        - name: cache-proxy
+          image: chucks4/cache-proxy:v2
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
+          env:
+            - name: REDIS_HOST
+              value: "redis-service"
+            - name: VLLM_URL
+              value: "https://YOUR-POD-ID-8000.proxy.runpod.net/v1/chat/completions"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache-proxy-service
+  namespace: llm-serving
+  labels:
+    app: cache-proxy
+spec:
+  selector:
+    app: cache-proxy
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
