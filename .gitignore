@@ -1,0 +1,29 @@
+hostname
+cd ~/llama3-vllm-k8s
+cat > .gitignore << 'GITEOF'
+# Secrets and credentials
+.env
+*.env
+.env.*
+*secret*.yaml
+*.pem
+*.key
+kubeconfig
+.kube/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+vllm-env/
+
+# macOS and editors (you use PyCharm)
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
+GITEOF
+cat .gitignore
